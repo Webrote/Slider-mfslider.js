@@ -1,0 +1,66 @@
+.slider {
+	position: relative;
+	padding-top: 60%;
+	overflow: hidden;
+}
+.slider .slide {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	z-index: 1;
+	opacity: 0;
+}
+.slider img.slide {
+	height: auto;
+}
+.slider .prev,
+.slider .next{
+  position: absolute;
+  height: 80px;
+  line-height: 55px;
+  width: 50px;
+  font-size: 100px;
+  text-align: center;
+  color: #777;
+  top: 50%;
+  left: 0;
+  z-index: 4;
+  margin-top: -25px;
+  cursor: pointer;
+  opacity: .7;
+  transition: all 150ms;
+}
+.slider .next{
+  left: auto;
+  right: 0;
+}
+.slider .prev:hover,
+.slider .next:hover{
+  opacity: 1;
+}
+.slider .sliderPagers{
+  position: absolute;
+  width: 100%;
+  height: 40px;
+  line-height: 40px;
+  bottom: 0;
+  text-align: center;
+  z-index: 4;
+}
+.slider .sliderPagers li{
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  margin: 0 7px;
+  background: #777;
+  opacity: .7;
+  text-indent: -9999px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 150ms;
+}
+.slider .sliderPagers li:hover,
+.slider .sliderPagers li.active{
+  opacity: 1;
+}
