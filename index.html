@@ -16,17 +16,17 @@
 			<img src="img/1.jpg" alt="" class="slide">
 			<img src="img/2.jpg" alt="" class="slide">
 			<img src="img/3.jpg" alt="" class="slide">
-			<img src="img/4.jpg" alt="" class="slide">
 		</div>
 	</div>
 	<script>
 		$(document).ready(function () {
 			$('#slider1').mfslider({
-				autoplay: false,
-				autoplayTime: 2000,
+				autoplay: true,
+				autoplayTime: 5000,
 				animationTime: 500,
 				arrows: true,
-				pagination: true
+				pagination: true,
+				transition: 'horizontal'
 			});
 		});
 	</script>

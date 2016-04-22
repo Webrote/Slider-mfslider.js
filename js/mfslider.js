@@ -28,6 +28,8 @@
 		var sets = $.extend({},defaults,options);
 
 		var _this = $(this),
+			thisWidth = _this.width(),
+			thisHeight = _this.innerHeight(),
 			slides = _this.find(sets.slideSelector),
 			activeSlide,
 			newSlide,
@@ -36,9 +38,11 @@
 			pagers,
 			pager,
 			play,
+			AnimationIsDirect,
+			direction,
 			isAnimation = false,
 			prefix = getPrefix(_this[0]);
-		console.log(prefix);
+		console.log(thisWidth, thisHeight);
 
 		return this.each(function () {
 			var slider = {
@@ -66,40 +70,77 @@
 				},
 				slide: {
 					prev: function () {
-						switch (sets.transition) {
-							case "horizontal":
-								break;
-							case "vertical":
-								break;
-							case "fade":
-								newSlide = (activeSlide == 0) ? totalSlides-1 : activeSlide - 1;
-								slider.animation();
-								break;
-						}
+						AnimationIsDirect = false;
+						newSlide = (activeSlide == 0) ? totalSlides-1 : activeSlide - 1;
+						slider.animation();
+						// switch (sets.transition) {
+						// 	case "horizontal":
+						// 		break;
+						// 	case "vertical":
+						// 		break;
+						// 	case "fade":
+						// 		newSlide = (activeSlide == 0) ? totalSlides-1 : activeSlide - 1;
+						// 		slider.animation();
+						// 		break;
+						// }
 					},
 					next: function () {
-						switch (sets.transition) {
-							case "horizontal":
-								break;
-							case "vertical":
-								break;
-							case "fade":
-								newSlide = (activeSlide == totalSlides-1) ? 0 : activeSlide + 1;
-								slider.animation();
-								break;
-						}
+						AnimationIsDirect = true;
+						newSlide = (activeSlide == totalSlides-1) ? 0 : activeSlide + 1;
+						slider.animation();
+						// switch (sets.transition) {
+						// 	case "horizontal":
+						// 		break;
+						// 	case "vertical":
+						// 		break;
+						// 	case "fade":
+						// 		newSlide = (activeSlide == totalSlides-1) ? 0 : activeSlide + 1;
+						// 		slider.animation();
+						// 		break;
+						// }
+					}
+				},
+				zindex: {
+					horizontal: function () {
+						direction = (AnimationIsDirect) ? 1 : -1;
+						slides.eq(activeSlide).css('z-index', 2);
+						slides.eq(newSlide).css({
+							'z-index': 3,
+							'left': thisWidth * direction,
+							'opacity': 1
+						});
+					},
+					verticale: function () {
+						direction = (AnimationIsDirect) ? -1 : 1;
+						slides.eq(activeSlide).css('z-index', 2);
+						slides.eq(newSlide).css({
+							'z-index': 3,
+							'top': thisHeight * direction,
+							'opacity': 1
+						});
+					},
+					fade: function () {
+						slides.eq(activeSlide).css('z-index', 3);
+						slides.eq(newSlide).css({
+							'z-index': 2,
+							'opacity': 1
+						});
 					}
 				},
 				animation: function () {
 					if (isAnimation) return false;
 					isAnimation = true;
 					switch (sets.transition) {
+						case "horizontal":
+							slider.zindex.horizontal();
+							slides.eq(newSlide).animate({'left': 0}, sets.animationTime, slider.cleanUp);
+							break;
+						case "verticale":
+							slider.zindex.verticale();
+							slides.eq(newSlide).animate({'top': 0}, sets.animationTime, slider.cleanUp);
+							break;
 						case "fade":
-							slides.eq(activeSlide).css('z-index', 3);
-							slides.eq(newSlide).css({
-								'z-index': 2,
-								'opacity': 1
-							});
+							slider.zindex.fade();
 							if (!prefix) {
 								slides.eq(activeSlide).animate({'opacity': 0}, sets.animationTime, slider.cleanUp);
 							} else {
@@ -174,16 +215,18 @@
 							if (newSlide == activeSlide) {
 								return false;
 							}
+							AnimationIsDirect = (newSlide>activeSlide) ? 1 : 0;
 							slider.pagination.update();
-							switch (sets.transition) {
-								case "horizontal":
-									break;
-								case "vertical":
-									break;
-								case "fade":
-									slider.animation();
-									break;
-							}
+							slider.animation();
+							// switch (sets.transition) {
+							// 	case "horizontal":
+							// 		break;
+							// 	case "vertical":
+							// 		break;
+							// 	case "fade":
+							// 		slider.animation();
+							// 		break;
+							// }
 						});
 					},
 					update: function () {
