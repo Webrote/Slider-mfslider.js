@@ -31,6 +31,7 @@
 			thisWidth = _this.width(),
 			thisHeight = _this.innerHeight(),
 			slides = _this.find(sets.slideSelector),
+			jsSlides = document.getElementsByClassName('slide'),
 			activeSlide,
 			newSlide,
 			totalSlides = slides.length,
@@ -73,31 +74,11 @@
 						AnimationIsDirect = false;
 						newSlide = (activeSlide == 0) ? totalSlides-1 : activeSlide - 1;
 						slider.animation();
-						// switch (sets.transition) {
-						// 	case "horizontal":
-						// 		break;
-						// 	case "vertical":
-						// 		break;
-						// 	case "fade":
-						// 		newSlide = (activeSlide == 0) ? totalSlides-1 : activeSlide - 1;
-						// 		slider.animation();
-						// 		break;
-						// }
 					},
 					next: function () {
 						AnimationIsDirect = true;
 						newSlide = (activeSlide == totalSlides-1) ? 0 : activeSlide + 1;
 						slider.animation();
-						// switch (sets.transition) {
-						// 	case "horizontal":
-						// 		break;
-						// 	case "vertical":
-						// 		break;
-						// 	case "fade":
-						// 		newSlide = (activeSlide == totalSlides-1) ? 0 : activeSlide + 1;
-						// 		slider.animation();
-						// 		break;
-						// }
 					}
 				},
 				zindex: {
@@ -211,22 +192,16 @@
 					trigger: function () {
 						pager = pagers.children();
 						pager.click(function () {
-							newSlide = Number($(this).attr('data-target'));
-							if (newSlide == activeSlide) {
-								return false;
+							if (!isAnimation) {
+								newSlide = Number($(this).attr('data-target'));
+								if (newSlide == activeSlide) {
+									return false;
+								}
+								AnimationIsDirect = (newSlide>activeSlide) ? true : false;
+								//AnimationIsDirect = true;
+								slider.pagination.update();
+								slider.animation();
 							}
-							AnimationIsDirect = (newSlide>activeSlide) ? 1 : 0;
-							slider.pagination.update();
-							slider.animation();
-							// switch (sets.transition) {
-							// 	case "horizontal":
-							// 		break;
-							// 	case "vertical":
-							// 		break;
-							// 	case "fade":
-							// 		slider.animation();
-							// 		break;
-							// }
 						});
 					},
 					update: function () {
