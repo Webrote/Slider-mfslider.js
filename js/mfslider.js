@@ -108,6 +108,7 @@
 					}
 				},
 				setCssTransition: function (slide,property,value) {
+					// применяем CSS свойства элементам, которые должны анимироваться
 					var styles = {};
 					styles[prefix+'transition'] = property + ' ' + sets.animationTime + 'ms';
 					styles[property] = value;
