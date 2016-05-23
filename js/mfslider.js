@@ -43,7 +43,6 @@
 			direction,
 			isAnimation = false,
 			prefix = getPrefix(_this[0]);
-		console.log(thisWidth, thisHeight);
 
 		return this.each(function () {
 			var slider = {
@@ -83,21 +82,21 @@
 				},
 				zindex: {
 					horizontal: function () {
-						direction = (AnimationIsDirect) ? 1 : -1;
-						slides.eq(activeSlide).css('z-index', 2);
+						direction = (AnimationIsDirect) ? -1 : 1;
+						slides.eq(activeSlide).css('z-index', 3);
 						slides.eq(newSlide).css({
-							'z-index': 3,
-							'left': thisWidth * direction,
-							'opacity': 1
+							'z-index': 2,
+							//'left': thisWidth * direction,
+							//'opacity': 1
 						});
 					},
 					verticale: function () {
 						direction = (AnimationIsDirect) ? -1 : 1;
-						slides.eq(activeSlide).css('z-index', 2);
+						slides.eq(activeSlide).css('z-index', 3);
 						slides.eq(newSlide).css({
-							'z-index': 3,
-							'top': thisHeight * direction,
-							'opacity': 1
+							'z-index': 2,
+							//'top': thisHeight * direction,
+							//'opacity': 1
 						});
 					},
 					fade: function () {
@@ -108,27 +107,49 @@
 						});
 					}
 				},
+				setCssTransition: function (slide,property,value) {
+					var styles = {};
+					styles[prefix+'transition'] = property + ' ' + sets.animationTime + 'ms';
+					styles[property] = value;
+					slides.eq(slide).css(styles);
+				},
 				animation: function () {
 					if (isAnimation) return false;
 					isAnimation = true;
 					switch (sets.transition) {
 						case "horizontal":
 							slider.zindex.horizontal();
-							slides.eq(newSlide).animate({'left': 0}, sets.animationTime, slider.cleanUp);
+							if (!prefix) {
+								slides.eq(activeSlide).animate({'left': thisWidth * direction}, sets.animationTime, slider.cleanUp);
+							} else {
+								slider.setCssTransition(activeSlide,'left',thisWidth * direction);
+								slider.setCssTransition(newSlide,'opacity',1);
+								
+								var animTimer = setTimeout(function () {
+									slider.cleanUp();
+								},sets.animationTime);
+							}
 							break;
 						case "verticale":
 							slider.zindex.verticale();
-							slides.eq(newSlide).animate({'top': 0}, sets.animationTime, slider.cleanUp);
+							if (!prefix) {
+								slides.eq(activeSlide).animate({'top': thisHeight * direction}, sets.animationTime, slider.cleanUp);
+							} else {
+								slider.setCssTransition(activeSlide,'top',thisHeight * direction);
+								slider.setCssTransition(newSlide,'opacity',1);
+
+								var animTimer = setTimeout(function () {
+									slider.cleanUp();
+								},sets.animationTime);
+							}
 							break;
 						case "fade":
 							slider.zindex.fade();
 							if (!prefix) {
 								slides.eq(activeSlide).animate({'opacity': 0}, sets.animationTime, slider.cleanUp);
 							} else {
-								var styles = {};
-								styles[prefix+'transition'] = 'opacity '+sets.animationTime+'ms';
-								styles['opacity'] = 0;
-								slides.eq(activeSlide).css(styles);
+								slider.setCssTransition(activeSlide,'opacity',0);
+								
 								var animTimer = setTimeout(function () {
 									slider.cleanUp();
 								},sets.animationTime);
